@@ -28,6 +28,45 @@
       </header>
       <!-- end header section here -->
 
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center m-24 sm:space-x-2"
+      >
+        <!-- Sort Section -->
+        <div class="space-y-4">
+          <label class="font-bold" for="Sort">Sort by:</label>
+          <div class="flex flex-col md:flex-row md:space-x-4">
+            <select
+              name="lessons"
+              id="lessons"
+              class="border w-full md:w-48 rounded-lg p-2"
+            >
+              <option value="name">Name</option>
+              <option value="location">Location</option>
+              <option value="price">Price</option>
+            </select>
+            <select
+              name="order"
+              id="order"
+              class="border w-full md:w-48 rounded-lg p-2"
+            >
+              <option value="ascending">Ascending</option>
+              <option value="descending">Descending</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="flex justify-end space-x-2">
+          <input
+            type="text"
+            placeholder="Search for lessons..."
+            class="border-gray-300 rounded-lg border-2 p-2 w-full md:w-96"
+          />
+          <button class="bg-teal-400 text-white font-bold h-10 w-24 rounded-lg">
+            <span><i class="fa fa-search" aria-hidden="true"></i></span>
+          </button>
+        </div>
+      </div>
       <!-- Added projects or Main Page. -->
       <div v-if="showProduct">
         <div
@@ -95,7 +134,7 @@
 
               <button
                 v-on:click="removeItem(index)"
-                class="border-none p-2 text-black rounded-lg font-semibold"
+                class="border-none p-2 text-red rounded-lg font-semibold"
               >
                 <span><i class="fa fa-trash" aria-hidden="true"></i> </span>
               </button>
@@ -228,6 +267,7 @@
               return i != index;
             });
           },
+          // sort method
         },
 
         computed: {
