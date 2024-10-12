@@ -18,19 +18,136 @@
         <div class="flex items-center justify-between m-2 p-2">
           <h1 class="font-bold text-3xl text-white">JustStudy</h1>
           <button
-            class="border-2 rounded-lg p-2 hover:bg-white hover:text-black"
+            class="border rounded-lg p-2 hover:bg-white hover:text-black font-semibold"
           >
             <span><i class="fa fa-cart-plus" aria-hidden="true"></i> Cart</span>
           </button>
         </div>
       </header>
       <!-- end header section here -->
+
+      <!-- Added projects or Main Page. -->
+      <div class="grid sm:grid-cols-1 md:grid-cols-3 items-right m-24 gap-4">
+        <div
+          class="border border-solid shadow-md m-2 w-auto p-8 rounded-lg"
+          v-for="(lesson, index) in lessons"
+          :key="index"
+        >
+          <img
+            v-bind:src="lesson.images"
+            alt="backEndImage"
+            class="w-full h-48 object-cover rounded-lg mb-2"
+          />
+
+          <p class="font-bold pb-2">subject: {{lesson.subject}}</p>
+          <p class="font-semibold text-gray-800 pb-2">
+            price: ${{lesson.price}}
+          </p>
+          <p class="font-semibold text-gray-800 pb-2">
+            location:{{lesson.location}}
+          </p>
+          <p class="font-semibold text-gray-800 pb-2">
+            spaces: {{lesson.spaces}}
+          </p>
+
+          <button
+            class="border-none p-2 bg-green-500 text-white rounded-lg font-semibold"
+          >
+            add To Cart
+          </button>
+        </div>
+      </div>
+      <!-- end project. -->
     </div>
 
     <script type="text/javascript">
       var app = new Vue({
         el: "#app",
-        data: {},
+        data: {
+          lessons: [
+            {
+              id: 1,
+              subject: "Math",
+              location: "London",
+              price: 110,
+              spaces: 5,
+              images: "images/mathImage.jpg",
+            },
+            {
+              id: 2,
+              subject: "Physics",
+              location: "westham",
+              price: 123,
+              spaces: 5,
+              images: "images/PhysicsImage.jpeg",
+            },
+            {
+              id: 3,
+              subject: "Web Development",
+              location: "South London",
+              price: 80,
+              spaces: 5,
+              images: "images/webdevelopmentImage.jpeg",
+            },
+            {
+              id: 4,
+              subject: "Cybersecurity",
+              location: "Manchester",
+              price: 200,
+              spaces: 5,
+              images: "images/cybersecurityImage.jpeg",
+            },
+            {
+              id: 5,
+              subject: "Data science",
+              location: "Germany",
+              price: 450,
+              spaces: 5,
+              images: "images/datascienceImage.jpeg",
+            },
+            {
+              id: 6,
+              subject: "AI/Machine Learning",
+              location: "Dubai",
+              price: 225,
+              spaces: 5,
+              images: "images/ai-vs-machine-learningImage.png",
+            },
+            {
+              id: 7,
+              subject: "Linear Alegbra",
+              location: "westLondon",
+              price: 30,
+              spaces: 5,
+              images: "images/linearAlgebraImage.jpeg",
+            },
+            {
+              id: 8,
+              subject: "Operating System",
+              location: "Los Angelos",
+              price: 320,
+              spaces: 5,
+              images: "images/operatingsystemImage.jpeg",
+            },
+            {
+              id: 9,
+              subject: "Product Management",
+              location: "Portugal",
+              price: 245,
+              spaces: 5,
+              images: "images/productManagerImage.jpeg",
+            },
+            {
+              id: 10,
+              subject: "BackEnd Webdevelopment",
+              location: "switzerland",
+              price: 700,
+              spaces: 5,
+              images: "images/backEndImage.jpeg",
+            },
+          ],
+          cart: [],
+        },
         methods: {},
 
         computed: {},
