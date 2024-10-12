@@ -15,7 +15,7 @@
     <div id="app">
       <!-- header section -->
       <header class="bg-indigo-600 text-white">
-        <div class="flex items-center justify-between p-2">
+        <div class="flex items-center justify-between p-2 m-12">
           <h1 class="font-bold text-3xl text-white">JustStudy</h1>
           <button
             v-on:click="showCartItems"
@@ -36,8 +36,8 @@
           <label class="font-bold" for="Sort">Sort by:</label>
           <div class="flex flex-col md:flex-row md:space-x-4">
             <select
-              name="lessons"
-              id="lessons"
+              v-model="sortCriteria"
+              @change="sortLessons"
               class="border w-full md:w-48 rounded-lg p-2"
             >
               <option value="name">Name</option>
@@ -45,8 +45,8 @@
               <option value="price">Price</option>
             </select>
             <select
-              name="order"
-              id="order"
+              v-model="sortOrder"
+              @change="sortLessons"
               class="border w-full md:w-48 rounded-lg p-2"
             >
               <option value="ascending">Ascending</option>
@@ -150,6 +150,10 @@
         el: "#app",
         data: {
           showProduct: true,
+          // sorting variables.
+          sortCriteria: "name",
+          sortOrder: "ascending",
+
           lessons: [
             {
               id: 1,
@@ -268,6 +272,20 @@
             });
           },
           // sort method
+
+          sortLessons: function () {
+            this.lessons.sort((a, b) => {
+              let modifier = this.sortOrder === "ascending" ? 1 : -1;
+
+              if (this.sortCriteria === "name") {
+                return modifier * a.subject.localeCompare(b.subject);
+              } else if (this.sortCriteria === "location") {
+                return modifier * a.location.localeCompare(b.location);
+              } else if (this.sortCriteria === "price") {
+                return modifier * (a.price - b.price);
+              }
+            });
+          },
         },
 
         computed: {
