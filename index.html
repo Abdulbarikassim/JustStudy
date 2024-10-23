@@ -149,8 +149,10 @@
           </div>
         </div>
         <!-- checkout Area -->
-        <div class="flex items-center justify-between m-12">
-          <div class="p-8 shadow-lg border rounded-lg max-w-lg w-full">
+        <div
+          class="flex items-center justify-between m-12 grid lg:grid-cols-2 sm:grid-cols-1"
+        >
+          <div class="p-8 shadow-lg border rounded-lg w-auto">
             <h1 class="font-bold text-3xl mb-6 text-center">Checkout</h1>
 
             <div class="space-y-4">
@@ -163,6 +165,7 @@
                   id="firstName"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your first name"
+                  v-model="order.firstName"
                 />
               </div>
 
@@ -175,6 +178,7 @@
                   id="lastName"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your last name"
+                  v-model="order.lastName"
                 />
               </div>
 
@@ -185,6 +189,7 @@
                   id="address"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your address"
+                  v-model="order.address"
                 />
               </div>
 
@@ -195,22 +200,21 @@
                   id="city"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your city"
+                  v-model="order.city"
                 />
               </div>
 
               <div>
                 <label for="state" class="font-semibold block">State</label>
-                <select id="state" class="w-full border-2 p-2 rounded-lg">
+                <select
+                  v-model="order.state"
+                  class="w-full border-2 p-2 rounded-lg"
+                >
                   <option disabled selected>Select your state</option>
-                  <option value="NY">New York</option>
-                  <option value="CA">California</option>
+                  <option v-for="(state, key) in states" v-bind:value="state">
+                    {{key}}
+                  </option>
                 </select>
-              </div>
-
-              <div>
-                <label class="font-semibold block">Gift</label>
-                <input type="checkbox" id="gift" class="mr-2" />
-                <label for="gift" class="font-normal">This is a gift</label>
               </div>
 
               <div>
@@ -221,6 +225,7 @@
                   name="shipping"
                   value="home"
                   class="mr-2"
+                  v-model="method"
                 />
                 <label for="home" class="font-normal">Home</label>
 
@@ -235,38 +240,66 @@
               </div>
             </div>
           </div>
-          <!-- Show information section -->
-          <!-- <div class="mt-8 p-8 shadow-lg border rounded-lg max-w-lg w-full">
-            <h2 class="font-bold text-2xl mb-4">Order Summary</h2>
-            <p>
-              <strong>First Name:</strong> <span id="displayFirstName"></span>
-            </p>
-            <p class="mt-2">
-              <strong>Last Name:</strong> <span id="displayLastName"></span>
-            </p>
-            <p class="mt-2">
-              <strong>Address:</strong> <span id="displayAddress"></span>
-            </p>
-            <p class="mt-2">
-              <strong>City:</strong> <span id="displayCity"></span>
-            </p>
-            <p class="mt-2">
-              <strong>State:</strong> <span id="displayState"></span>
-            </p>
-          </div>   -->
-        </div>
 
-        <div class="flex justify-center items-center mb-24">
-          <button
-            class="border-none bg-green-500 text-white p-2 text-red rounded-lg font-semibold center w-48"
-          >
-            Confirm Order
-          </button>
+          <div>
+            <!-- Button to trigger the modal -->
+            <button
+              @click="showModal = true"
+              class="bg-blue-500 text-white p-2 rounded"
+            >
+              View Order Summary
+            </button>
+
+            <!-- Modal Background -->
+            <div
+              v-if="showModal"
+              class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            >
+              <!-- Modal Content -->
+              <div
+                class="bg-white p-8 shadow-lg border rounded-lg max-w-lg w-full relative"
+              >
+                <!-- Close button -->
+                <button
+                  @click="showModal = false"
+                  class="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+                >
+                  &times;
+                </button>
+
+                <h2 class="font-bold text-2xl mb-4">Order Summary</h2>
+                <p>
+                  <strong>First Name: {{ order.firstName }}</strong>
+                  <span id="displayFirstName"></span>
+                </p>
+                <p class="mt-2">
+                  <strong>Last Name: {{ order.lastName }}</strong>
+                  <span id="displayLastName"></span>
+                </p>
+                <p class="mt-2">
+                  <strong>Address: {{ order.address }}</strong>
+                  <span id="displayAddress"></span>
+                </p>
+                <p class="mt-2">
+                  <strong>City: {{ order.city }}</strong>
+                  <span id="displayCity"></span>
+                </p>
+                <p class="mt-2">
+                  <strong>State: {{ order.state }}</strong>
+                  <span id="displayState"></span>
+                </p>
+                <p class="mt-2">
+                  <strong>Order: {{ order.method }}</strong>
+                  <span id="displayOrder"></span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- end project. -->
     </div>
-
+    <script src="lessons.js"></script>
     <script type="text/javascript">
       var app = new Vue({
         el: "#app",
@@ -277,88 +310,16 @@
           sortOrder: "ascending",
           // store search input
           searchQuery: "",
-          lessons: [
-            {
-              id: 1,
-              subject: "Math",
-              location: "London",
-              price: 110,
-              spaces: 5,
-              images: "images/mathImage.jpg",
-            },
-            {
-              id: 2,
-              subject: "Physics",
-              location: "westham",
-              price: 123,
-              spaces: 5,
-              images: "images/PhysicsImage.jpeg",
-            },
-            {
-              id: 3,
-              subject: "Web Development",
-              location: "South London",
-              price: 80,
-              spaces: 5,
-              images: "images/webdevelopmentImage.jpeg",
-            },
-            {
-              id: 4,
-              subject: "Cybersecurity",
-              location: "Manchester",
-              price: 200,
-              spaces: 5,
-              images: "images/cybersecurityImage.jpeg",
-            },
-            {
-              id: 5,
-              subject: "Data science",
-              location: "Germany",
-              price: 450,
-              spaces: 5,
-              images: "images/datascienceImage.jpeg",
-            },
-            {
-              id: 6,
-              subject: "AI/Machine Learning",
-              location: "Dubai",
-              price: 225,
-              spaces: 5,
-              images: "images/ai-vs-machine-learningImage.png",
-            },
-            {
-              id: 7,
-              subject: "Linear Alegbra",
-              location: "westLondon",
-              price: 30,
-              spaces: 5,
-              images: "images/linearAlgebraImage.jpeg",
-            },
-            {
-              id: 8,
-              subject: "Operating System",
-              location: "Los Angelos",
-              price: 320,
-              spaces: 5,
-              images: "images/operatingsystemImage.jpeg",
-            },
-            {
-              id: 9,
-              subject: "Product Management",
-              location: "Portugal",
-              price: 245,
-              spaces: 5,
-              images: "images/productManagerImage.jpeg",
-            },
-            {
-              id: 10,
-              subject: "BackEnd Webdevelopment",
-              location: "switzerland",
-              price: 700,
-              spaces: 5,
-              images: "images/backEndImage.jpeg",
-            },
-          ],
+          method: "home",
+
+          // show the modal
+          showModal: false,
+          // lessons.
+          lessons: lessons,
+          // order.
+          order: order,
+          // states.
+
           cart: [],
         },
         methods: {

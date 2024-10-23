@@ -1,0 +1,101 @@
+let lessons = [
+  {
+    id: 1,
+    subject: "Math",
+    location: "London",
+    price: 110,
+    spaces: 5,
+    images: "images/mathImage.jpg",
+  },
+  {
+    id: 2,
+    subject: "Physics",
+    location: "westham",
+    price: 123,
+    spaces: 5,
+    images: "images/PhysicsImage.jpeg",
+  },
+  {
+    id: 3,
+    subject: "Web Development",
+    location: "South London",
+    price: 80,
+    spaces: 5,
+    images: "images/webdevelopmentImage.jpeg",
+  },
+  {
+    id: 4,
+    subject: "Cybersecurity",
+    location: "Manchester",
+    price: 200,
+    spaces: 5,
+    images: "images/cybersecurityImage.jpeg",
+  },
+  {
+    id: 5,
+    subject: "Data science",
+    location: "Germany",
+    price: 450,
+    spaces: 5,
+    images: "images/datascienceImage.jpeg",
+  },
+  {
+    id: 6,
+    subject: "AI/Machine Learning",
+    location: "Dubai",
+    price: 225,
+    spaces: 5,
+    images: "images/ai-vs-machine-learningImage.png",
+  },
+  {
+    id: 7,
+    subject: "Linear Alegbra",
+    location: "westLondon",
+    price: 30,
+    spaces: 5,
+    images: "images/linearAlgebraImage.jpeg",
+  },
+  {
+    id: 8,
+    subject: "Operating System",
+    location: "Los Angelos",
+    price: 320,
+    spaces: 5,
+    images: "images/operatingsystemImage.jpeg",
+  },
+  {
+    id: 9,
+    subject: "Product Management",
+    location: "Portugal",
+    price: 245,
+    spaces: 5,
+    images: "images/productManagerImage.jpeg",
+  },
+  {
+    id: 10,
+    subject: "BackEnd Webdevelopment",
+    location: "switzerland",
+    price: 700,
+    spaces: 5,
+    images: "images/backEndImage.jpeg",
+  },
+];
+
+// data to keep truck of the order information.
+let order = {
+  firstName: "",
+  lastName: "",
+  address: "",
+  city: "",
+  state: "",
+};
+// states
+let states = {
+  AD: "Abu Dhabi",
+  DU: "Dubai",
+  SH: "Sharjah",
+  AJ: "Ajman",
+  UQ: "Umm Al-Quwain",
+  FJ: "Fujairah",
+  RK: "Ras Al Khaimah",
+};
