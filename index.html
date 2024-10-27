@@ -19,7 +19,7 @@
           <h1 class="font-bold text-3xl text-white">JustStudy</h1>
           <button
             v-if="!isCartEmpty"
-            v-on:click="showCartItems"
+            v-on:click="showCartItems; navitagePages('productPage')"
             class="border rounded-lg p-2 hover:bg-white hover:text-black font-semibold"
           >
             {{countCartItems}}
@@ -28,7 +28,7 @@
         </div>
       </header>
       <!-- end header section here -->
-      <div v-if="showProduct">
+      <div v-if="page === 'homePage' ">
         <div
           class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center m-12 sm:space-x-2"
         >
@@ -116,8 +116,8 @@
           </div>
         </div>
       </div>
-      <!-- checkOut page -->
-      <div v-else>
+      <!-- product checkOut page -->
+      <div v-if="page === 'productPage' && !isCartEmpty">
         <h1 class="text-2xl font-bold text-center my-6">Cart Items</h1>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6 p-6">
           <div
@@ -148,10 +148,19 @@
             </div>
           </div>
         </div>
-        <!-- checkout Area -->
-        <div
-          class="flex items-center justify-between m-12 grid lg:grid-cols-2 sm:grid-cols-1"
-        >
+        <div class="flex justify-center items-center">
+          <button
+            v-if="!isCartEmpty"
+            v-on:click="naviageToCheckOut('checkOutPage')"
+            class="border-none bg-green-500 text-white p-2 text-red rounded-lg font-semibold"
+          >
+            checkOut
+          </button>
+        </div>
+      </div>
+      <!-- checkout Area -->
+      <div v-if="page === 'checkOutPage' ">
+        <div class="m-12 grid lg:grid-cols-2 sm:grid-cols-1">
           <div class="p-8 shadow-lg border rounded-lg w-auto">
             <h1 class="font-bold text-3xl mb-6 text-center">Checkout</h1>
 
@@ -240,63 +249,65 @@
               </div>
             </div>
           </div>
+        </div>
+        <!-- End checkOut -->
+        <div class="flex justify-center align-center m-12">
+          <!-- Button to trigger the modal -->
+          <button
+            @click="showModal = true"
+            class="bg-blue-500 text-white p-2 rounded"
+          >
+            Submit Order
+          </button>
 
-          <div>
-            <!-- Button to trigger the modal -->
-            <button
-              @click="showModal = true"
-              class="bg-blue-500 text-white p-2 rounded"
-            >
-              View Order Summary
-            </button>
-
-            <!-- Modal Background -->
+          <!-- Modal Background -->
+          <div
+            v-if="showModal"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          >
+            <!-- Modal Content -->
             <div
-              v-if="showModal"
-              class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+              class="bg-white p-8 shadow-lg border rounded-lg max-w-lg w-full relative"
             >
-              <!-- Modal Content -->
-              <div
-                class="bg-white p-8 shadow-lg border rounded-lg max-w-lg w-full relative"
+              <!-- Close button -->
+              <button
+                @click="showModal = false"
+                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
               >
-                <!-- Close button -->
-                <button
-                  @click="showModal = false"
-                  class="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-                >
-                  &times;
-                </button>
+                &times;
+              </button>
 
-                <h2 class="font-bold text-2xl mb-4">Order Summary</h2>
-                <p>
-                  <strong>First Name: {{ order.firstName }}</strong>
-                  <span id="displayFirstName"></span>
-                </p>
-                <p class="mt-2">
-                  <strong>Last Name: {{ order.lastName }}</strong>
-                  <span id="displayLastName"></span>
-                </p>
-                <p class="mt-2">
-                  <strong>Address: {{ order.address }}</strong>
-                  <span id="displayAddress"></span>
-                </p>
-                <p class="mt-2">
-                  <strong>City: {{ order.city }}</strong>
-                  <span id="displayCity"></span>
-                </p>
-                <p class="mt-2">
-                  <strong>State: {{ order.state }}</strong>
-                  <span id="displayState"></span>
-                </p>
-                <p class="mt-2">
-                  <strong>Order: {{ order.method }}</strong>
-                  <span id="displayOrder"></span>
-                </p>
-              </div>
+              <h2 class="font-bold text-2xl mb-4">Order Summary</h2>
+              <p>
+                <strong>First Name: {{ order.firstName }}</strong>
+                <span id="displayFirstName"></span>
+              </p>
+              <p class="mt-2">
+                <strong>Last Name: {{ order.lastName }}</strong>
+                <span id="displayLastName"></span>
+              </p>
+              <p class="mt-2">
+                <strong>Address: {{ order.address }}</strong>
+                <span id="displayAddress"></span>
+              </p>
+              <p class="mt-2">
+                <strong>City: {{ order.city }}</strong>
+                <span id="displayCity"></span>
+              </p>
+              <p class="mt-2">
+                <strong>Deliver To: {{ order.state }}</strong>
+                <span id="displayState"></span>
+              </p>
+              <p class="mt-2">
+                <strong>Order: {{ order.method }}</strong>
+                <span id="displayOrder"></span>
+              </p>
             </div>
           </div>
+          <!-- end Modal -->
         </div>
       </div>
+
       <!-- end project. -->
     </div>
     <script src="lessons.js"></script>
@@ -304,14 +315,15 @@
       var app = new Vue({
         el: "#app",
         data: {
-          showProduct: true,
+          page: "homePage",
           // sorting variables.
           sortCriteria: "name",
           sortOrder: "ascending",
           // store search input
           searchQuery: "",
           method: "home",
-
+          // show checkOut.
+          showCheckOut: true,
           // show the modal
           showModal: false,
           // lessons.
@@ -319,7 +331,7 @@
           // order.
           order: order,
           // states.
-
+          states: states,
           cart: [],
         },
         methods: {
@@ -370,8 +382,30 @@
               }
             });
           },
+          // Navigate Pages.
+
+          navitagePages: function (page) {
+            if (this.page === "homePage") {
+              this.page = "productPage";
+            } else if (this.page === "productPage") {
+              this.page = "homePage";
+            } else if (this.page === "checkOutPage") {
+              this.page = "productPage";
+            }
+          },
+          naviageToCheckOut(page) {
+            this.page = page;
+          },
         },
 
+        // watcher function.
+        watch: {
+          isCartEmpty(newValue) {
+            if (newValue) {
+              this.page = "homePage";
+            }
+          },
+        },
         computed: {
           countCartItems: function () {
             return this.cart.length || "";
