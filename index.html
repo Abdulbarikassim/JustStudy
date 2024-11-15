@@ -120,7 +120,7 @@
             <button
               v-if="lesson.spaces > 0"
               v-on:click="addToCart(index)"
-              class="border-none p-2 bg-green-500 text-white rounded-lg font-semibold"
+              class="border-none p-2 bg-gradient-to-l from-green-800 to-green-300 text-white rounded-lg font-semibold"
             >
               add To Cart
               <span><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
@@ -158,7 +158,7 @@
 
               <button
                 v-on:click="removeItem(index)"
-                class="border-none bg-red-500 text-white p-2 text-red rounded-lg font-semibold"
+                class="border-none bg-gradient-to-l from-red-800 to-red-300 text-white p-2 text-red rounded-lg font-semibold"
               >
                 <span
                   ><i class="fa fa-trash" aria-hidden="true"></i> Remove</span
@@ -171,7 +171,7 @@
           <button
             v-if="!isCartEmpty"
             v-on:click="naviageToCheckOut('checkOutPage')"
-            class="border-none bg-green-500 text-white p-2 text-red rounded-lg font-semibold"
+            class="border-none bg-green-500 text-white p-2 text-red rounded-lg font-semibold mb-12"
           >
             checkOut
           </button>
@@ -207,18 +207,20 @@
                   id="lastName"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your last name"
+                  pattern="[A-Za-z]+"
                   v-model="order.lastName"
                   required
                 />
               </div>
 
               <div>
-                <label for="address" class="font-semibold block">Address</label>
+                <label for="address" class="font-semibold block">Email:</label>
                 <input
                   type="text"
                   id="address"
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your address"
+                  pattern="[A-Za-z0-9\s!@#$%^&*()_+{}]+"
                   v-model="order.address"
                   required
                 />
@@ -239,13 +241,14 @@
               </div>
 
               <div>
-                <label for="city" class="font-semibold block">City</label>
+                <label for="city" class="font-semibold block">Phone: </label>
                 <input
                   type="text"
                   id="city"
                   class="w-full border-2 p-2 rounded-lg"
-                  placeholder="Enter your city"
-                  v-model="order.city"
+                  placeholder="Enter your Phone"
+                  pattern="[\+\d\-\(\)\s]{7,15}"
+                  v-model="order.phoneNumber"
                   required
                 />
               </div>
@@ -263,41 +266,40 @@
         <!-- End checkOut -->
       </div>
       <div
-        v-if="showModal && submitted"
+        v-if="showModal && submitted "
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         <!-- Modal Content -->
         <div
           class="bg-white p-8 shadow-lg border rounded-lg max-w-lg w-full relative"
         >
-          <!-- Close button -->
+          <p class="font-semibold">
+            <span v-if="submitted">
+              Hello
+              <span class="font-bold"
+                >{{ order.firstName }} {{order.lastName}} From
+                {{order.state}}</span
+              >
+              Town. You're order has been placed successful</span
+            >
+          </p>
+          <p
+            class="text-2xl bg-gradient-to-r from-green-800 to-green-300 bg-clip-text text-transparent"
+          >
+            Order have been successful. Thanks For Choosing JustStudy.
+          </p>
+          <br />
 
-          <h2 class="font-bold text-2xl mb-4">Order Summary</h2>
-          <p>
-            <strong>Names: {{ order.firstName }} {{order.lastName}}</strong>
+          <p class="text-center p-12 text-7xl">
+            <i class="fa fa-circle-check" aria-hidden="true"></i>
+          </p>
 
-            <span id="displayFirstName"></span>
-          </p>
-          <p class="mt-2">
-            <strong>Last Name: {{ order.lastName }}</strong>
-            <span id="displayLastName"></span>
-          </p>
-          <p class="mt-2">
-            <strong>Address: {{ order.address }}</strong>
-            <span id="displayAddress"></span>
-          </p>
-          <p class="mt-2">
-            <strong>City: {{ order.city }}</strong>
-            <span id="displayCity"></span>
-          </p>
-          <p class="mt-2">
-            <strong>Deliver To: {{ order.state }}</strong>
-            <span id="displayState"></span>
-          </p>
-          <p class="mt-2">
-            <strong>Order: {{ order.method }}</strong>
-            <span id="displayOrder"></span>
-          </p>
+          <button
+            @click="doneWithOrder"
+            class="mt-4 bg-pink-500 text-white p-2 rounded-lg w-full"
+          >
+            Done
+          </button>
         </div>
       </div>
       <!-- end project. -->
@@ -393,8 +395,6 @@
                 return modifier * (a.ratings - b.ratings);
               }
             });
-            //  logging my  lessons to see if the sorting is working.
-            console.log("Lessons after sorting: ", this.lessons);
           },
           // Navigate Pages.
           navitagePages: function (page) {
@@ -415,6 +415,27 @@
             // You can handle form data here.
             this.submitted = true; // Set submitted status to true
             // this.showModal = true;
+            setTimeout(() => {
+              this.order = {
+                firstName: "",
+                lastName: "",
+                address: "",
+                state: "",
+                city: "",
+              };
+            }, 100000);
+            this.showModal = true;
+          },
+
+          // done with order.
+
+          doneWithOrder() {
+            this.page = "homePage";
+            // after going to the homePage make the cart empty.
+            this.cart = [];
+            this.showModal = false;
+            this.submitted = false;
+            // reset the form.
             this.order = {
               firstName: "",
               lastName: "",
@@ -422,13 +443,6 @@
               state: "",
               city: "",
             };
-            this.showModal = true;
-            setTimeout(() => {
-              this.page = "homePage";
-              this.cart = [];
-              this.showModal = false;
-              this.filteredLessons = filteredLessons;
-            }, 3000);
           },
         },
 
