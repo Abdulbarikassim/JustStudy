@@ -7,7 +7,6 @@ var app = new Vue({
     sortOrder: "ascending",
     // store search input.
     searchQuery: "",
-    method: "home",
     // show checkOut.
     showCheckOut: true,
     // show the modal
@@ -20,9 +19,9 @@ var app = new Vue({
     order: {
       firstName: "",
       lastName: "",
-      address: "",
-      city: "",
+      email: "",
       state: "",
+      phoneNumber: "",
     },
     // states
     states: {
@@ -37,11 +36,41 @@ var app = new Vue({
     cart: [],
   },
   methods: {
-    // add Lessons in the cart.
+    // fetch all lessons.
+    async fetchLessons() {
+      try {
+        const response = await fetch("http://localhost:5001/api/lessons");
+        if (!response.ok) throw new Error("Failed to fetch lessons ");
+        const data = await response.json();
+        this.lessons = data;
+      } catch (err) {
+        console.error("Failed to fetch lessons");
+      }
+    },
+    // add Lessons in the cart and reduces spaces.
     addToCart: function (index) {
-      if (this.lessons[index].spaces > 0) {
-        this.cart.push(this.lessons[index]);
-        this.lessons[index].spaces--;
+      const lesson = this.lessons[index];
+      if (lesson.spaces > 0) {
+        this.cart.push(lesson);
+        lesson.spaces--;
+        this.updateLessonSpaces(lesson.id, lesson.spaces);
+      }
+    },
+    //updating the lessons spaces using a fetch request.
+
+    async updateLessonSpaces(id, spaces) {
+      try {
+        const response = await fetch(
+          `http://localhost:5001/api/lessons/${id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ spaces }),
+          }
+        );
+        if (!response.ok) throw new Error("failed to update the spaces");
+      } catch (err) {
+        console.error(err.message);
       }
     },
     // showCartItems
@@ -61,9 +90,8 @@ var app = new Vue({
       const originalLesson = this.lessons.find(
         (lesson) => lesson.id === removedItem.id
       );
-      if (originalLesson) {
-        originalLesson.spaces++;
-      }
+      originalLesson.spaces++;
+      this.updateLessonSpaces(originalLesson.id, originalLesson.spaces);
 
       this.cart = this.cart.filter((item, i) => {
         return i != index;
@@ -102,22 +130,6 @@ var app = new Vue({
       this.page = page;
     },
     // submit order.
-
-    handleSubmit() {
-      // You can handle form data here.
-      this.submitted = true; // Set submitted status to true
-      // this.showModal = true;
-      setTimeout(() => {
-        this.order = {
-          firstName: "",
-          lastName: "",
-          address: "",
-          state: "",
-          city: "",
-        };
-      }, 100000);
-      this.showModal = true;
-    },
 
     // done with order.
 
@@ -179,5 +191,8 @@ var app = new Vue({
       // return the matching lessons.
       return newSearchLessons;
     },
+  },
+  mounted() {
+    this.fetchLessons();
   },
 });

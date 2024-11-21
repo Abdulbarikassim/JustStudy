@@ -74,11 +74,6 @@
               class="border-gray-300 rounded-lg border-2 p-2 w-full md:w-96 active:border-black"
               v-model="searchQuery"
             />
-            <button
-              class="bg-white text-black border-2 border-black font-bold h-10 w-12 rounded-lg hover:bg-gray-700 hover:text-white"
-            >
-              <span><i class="fa fa-search" aria-hidden="true"></i></span>
-            </button>
           </div>
         </div>
 
@@ -89,7 +84,7 @@
         >
           <div
             class="border border-solid shadow-md m-2 w-auto p-8 rounded-lg"
-            v-for="(lesson, index) in filteredLessons"
+            v-for="(lesson, index) in filteredLessons   "
             :key="index"
           >
             <img
@@ -100,7 +95,7 @@
 
             <p class="font-bold pb-2">subject: {{lesson.subject}}</p>
             <p class="text-gray-800 pb-2">
-              <span class="font-semibold pr-4"> price:</span> ${{lesson.price}}
+              <span class="font-semibold pr-4"> price:</span> $ {{lesson.price}}
             </p>
             <p class="text-gray-800 pb-2">
               <span class="font-semibold pr-4"> location:</span
@@ -152,13 +147,19 @@
 
             <div class="">
               <p class="font-bold pb-4">subject: {{items.subject}}</p>
-              <p class="text-gray-800 pb-2">price: ${{items.price}}</p>
-              <p class="text-gray-800 pb-2">location: {{items.location}}</p>
-              <p class="text-gray-800 pb-2">spaces: {{items.spaces}}</p>
+              <p class="text-gray-600 font-semibold pb-2">
+                price: ${{items.price}}
+              </p>
+              <p class="text-gray-600 font-semibold pb-2">
+                location: {{items.location}}
+              </p>
+              <p class="text-gray-600 font-semibold pb-2">
+                spaces: {{items.spaces}}
+              </p>
 
               <button
                 v-on:click="removeItem(index)"
-                class="border-none bg-gradient-to-l from-red-800 to-red-300 text-white p-2 text-red rounded-lg font-semibold"
+                class="border-none bg-red-500 text-white p-2 text-red rounded-lg font-semibold"
               >
                 <span
                   ><i class="fa fa-trash" aria-hidden="true"></i> Remove</span
@@ -221,7 +222,7 @@
                   class="w-full border-2 p-2 rounded-lg"
                   placeholder="Enter your address"
                   pattern="[A-Za-z0-9\s!@#$%^&*()_+{}]+"
-                  v-model="order.address"
+                  v-model="order.email"
                   required
                 />
               </div>
@@ -283,7 +284,8 @@
                   >{{ order.firstName }} {{order.lastName}} From
                   {{order.state}}</span
                 >
-                Town, Order have been successful. Thanks For Choosing JustStudy.
+                Town, Order has been placed successful. Thanks For Choosing
+                JustStudy.
               </p>
             </span>
           </p>
