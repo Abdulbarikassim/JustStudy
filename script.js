@@ -12,7 +12,7 @@ var app = new Vue({
     // show the modal
     showModal: false,
     // lessons.
-    lessons: lessons,
+    lessons: [],
     submitted: false,
 
     // data to keep truck of the order information.
@@ -53,7 +53,6 @@ var app = new Vue({
       if (lesson.spaces > 0) {
         this.cart.push(lesson);
         lesson.spaces--;
-        this.updateLessonSpaces(lesson.id, lesson.spaces);
       }
     },
     //updating the lessons spaces using a fetch request.
@@ -63,7 +62,7 @@ var app = new Vue({
         const response = await fetch(
           `http://localhost:5001/api/lessons/${id}`,
           {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ spaces }),
           }
@@ -88,10 +87,13 @@ var app = new Vue({
       const removedItem = this.cart[index];
 
       const originalLesson = this.lessons.find(
-        (lesson) => lesson.id === removedItem.id
+        (lesson) => lesson._id === removedItem._id
       );
-      originalLesson.spaces++;
-      this.updateLessonSpaces(originalLesson.id, originalLesson.spaces);
+      if (originalLesson) {
+        originalLesson.spaces++;
+      }
+
+      this.updateLessonSpaces(originalLesson._id, originalLesson.spaces);
 
       this.cart = this.cart.filter((item, i) => {
         return i != index;
@@ -130,26 +132,62 @@ var app = new Vue({
       this.page = page;
     },
     // submit order.
+    async handleSubmit() {
+      try {
+        const response = await fetch(
+          "http://localhost:5001/api/lessons/order",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...this.order,
+              cart: this.cart,
+            }),
+          }
+        );
+
+        if (!response.ok) throw new Error("order submission failed");
+
+        await Promise.all(
+          this.cart.map((lesson) =>
+            fetch(`http://localhost:5001/api/lessons/${lesson._id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ spaces: lesson.spaces }),
+            })
+          )
+        );
+        this.submitted = true;
+        //refresh lessons to update the changes.
+        this.fetchLessons();
+
+        setTimeout(() => {
+          this.order = {
+            firstName: "",
+            lastName: "",
+            email: "",
+            state: "",
+            phoneNumber: "",
+          };
+          this.cart = [];
+        }, 100000);
+        this.showModal = true;
+      } catch (err) {
+        console.error("failed to submit order: ", err.message);
+      }
+      // You can handle form data here.
+    },
 
     // done with order.
 
     doneWithOrder() {
       this.page = "homePage";
-      // after going to the homePage make the cart empty.
-      this.cart = [];
+      // after going to the homePage.
+
       this.showModal = false;
       this.submitted = false;
-      // reset the form.
-      this.order = {
-        firstName: "",
-        lastName: "",
-        address: "",
-        state: "",
-        city: "",
-      };
     },
   },
-
   // watcher function.
   watch: {
     isCartEmpty(newValue) {
@@ -174,15 +212,15 @@ var app = new Vue({
       // create an empty array to store the newLessons.
       let newSearchLessons = [];
       // change the search input to lowercase.
-      let toCaseQuery = this.searchQuery.toLowerCase();
+      let toLowerCaseQuery = this.searchQuery.toLowerCase();
 
       let lessons = this.lessons;
       // loop through all the lessons and check if the input search is matching with what i have in my lessons.
       lessons.forEach((lesson) => {
         if (
-          lesson.subject.toLowerCase().includes(toCaseQuery) ||
-          lesson.location.toLowerCase().includes(toCaseQuery) ||
-          lesson.price.toString().includes(toCaseQuery)
+          lesson.subject.toLowerCase().includes(toLowerCaseQuery) ||
+          lesson.location.toLowerCase().includes(toLowerCaseQuery) ||
+          lesson.price.toString().includes(toLowerCaseQuery)
         ) {
           // push the matching lessons.
           newSearchLessons.push(lesson);
