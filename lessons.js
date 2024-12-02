@@ -6,7 +6,7 @@ let lessons = [
     price: 110,
     spaces: 5,
     ratings: 5,
-    images: "images/swimming.jpg",
+    images: "images/swimming.jpeg",
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ let lessons = [
     price: 123,
     spaces: 5,
     ratings: 4,
-    images: "images/football.jpg",
+    images: "images/football.jpeg",
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ let lessons = [
     price: 80,
     spaces: 5,
     ratings: 3,
-    images: "images/basketball.jpg",
+    images: "images/basketball.jpeg",
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ let lessons = [
     price: 200,
     spaces: 5,
     ratings: 4,
-    images: "images/golf.jpg",
+    images: "images/golf.jpeg",
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ let lessons = [
     price: 450,
     spaces: 5,
     ratings: 3,
-    images: "images/cricket.jpg",
+    images: "images/cricket.jpeg",
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ let lessons = [
     price: 225,
     spaces: 5,
     ratings: 5,
-    images: "images/ai.jpg",
+    images: "images/ai-vs-machine-learningImage.png",
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ let lessons = [
     price: 30,
     spaces: 5,
     ratings: 4,
-    images: "images/filmProduction.jpg",
+    images: "images/filmandProduction.jpeg",
   },
   {
     id: 8,
@@ -69,7 +69,7 @@ let lessons = [
     price: 320,
     spaces: 5,
     ratings: 3,
-    images: "images/musicProduction.jpg",
+    images: "images/music.jpeg",
   },
   {
     id: 9,
@@ -78,7 +78,7 @@ let lessons = [
     price: 245,
     spaces: 5,
     ratings: 3,
-    images: "images/running.jpg",
+    images: "images/running.jpeg",
   },
   {
     id: 10,
@@ -87,6 +87,6 @@ let lessons = [
     price: 700,
     spaces: 5,
     ratings: 4,
-    images: "images/rubgy.jpg",
+    images: "images/rubgy.jpeg",
   },
 ];
