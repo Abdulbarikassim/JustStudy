@@ -14,6 +14,7 @@ var app = new Vue({
     // lessons.
     lessons: [],
     submitted: false,
+    filteredLessons: [],
 
     // data to keep truck of the order information.
     order: {
@@ -43,15 +44,20 @@ var app = new Vue({
         if (!response.ok) throw new Error("Failed to fetch lessons ");
         const data = await response.json();
         this.lessons = data;
+        this.filteredLessons = data;
       } catch (err) {
         console.error("Failed to fetch lessons");
       }
     },
     // add Lessons in the cart and reduces spaces.
-    addToCart: function (index) {
-      const lesson = this.lessons[index];
-      if (lesson.spaces > 0) {
-        this.cart.push(lesson);
+    addToCart(lessonId) {
+      // Find the lesson by _id
+      const lesson = this.lessons.find((lesson) => lesson._id === lessonId);
+
+      if (lesson && lesson.spaces > 0) {
+        this.cart.push({ ...lesson });
+
+        // Decrement available spaces
         lesson.spaces--;
       }
     },
@@ -91,9 +97,8 @@ var app = new Vue({
       );
       if (originalLesson) {
         originalLesson.spaces++;
+        this.updateLessonSpaces(originalLesson._id, originalLesson.spaces);
       }
-
-      this.updateLessonSpaces(originalLesson._id, originalLesson.spaces);
 
       this.cart = this.cart.filter((item, i) => {
         return i != index;
@@ -104,7 +109,7 @@ var app = new Vue({
     sortLessons: function () {
       const modifier = this.sortOrder === "ascending" ? 1 : -1;
 
-      this.lessons.sort((a, b) => {
+      this.filteredLessons.sort((a, b) => {
         if (this.sortCriteria === "name") {
           return modifier * (a.subject > b.subject ? 1 : -1);
         } else if (this.sortCriteria === "location") {
@@ -141,7 +146,12 @@ var app = new Vue({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               ...this.order,
-              cart: this.cart,
+              cart: this.cart.map((lesson) => ({
+                id: lesson._id,
+                subject: lesson.subject,
+                price: lesson.price,
+                location: lesson.location,
+              })),
             }),
           }
         );
@@ -187,6 +197,27 @@ var app = new Vue({
       this.showModal = false;
       this.submitted = false;
     },
+    //method for searching lessons.
+    async searchLessons() {
+      const query = this.searchQuery.trim(); // Ensure no trailing spaces
+      if (query === "") {
+        // Reset the filteredLessons if the query is empty
+        this.filteredLessons = [...this.lessons];
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:5001/api/search?q=${encodeURIComponent(query)}`
+        );
+
+        if (!response.ok) throw new Error("Search failed");
+        const data = await response.json();
+        this.filteredLessons = data;
+      } catch (err) {
+        console.error("Failed to search lessons", err.message);
+      }
+    },
   },
   // watcher function.
   watch: {
@@ -205,32 +236,10 @@ var app = new Vue({
     isCartEmpty: function () {
       return this.cart.length === 0;
     },
-
-    // search functionality.
-
-    filteredLessons() {
-      // create an empty array to store the newLessons.
-      let newSearchLessons = [];
-      // change the search input to lowercase.
-      let toLowerCaseQuery = this.searchQuery.toLowerCase();
-
-      let lessons = this.lessons;
-      // loop through all the lessons and check if the input search is matching with what i have in my lessons.
-      lessons.forEach((lesson) => {
-        if (
-          lesson.subject.toLowerCase().includes(toLowerCaseQuery) ||
-          lesson.location.toLowerCase().includes(toLowerCaseQuery) ||
-          lesson.price.toString().includes(toLowerCaseQuery)
-        ) {
-          // push the matching lessons.
-          newSearchLessons.push(lesson);
-        }
-      });
-      // return the matching lessons.
-      return newSearchLessons;
-    },
   },
   mounted() {
-    this.fetchLessons();
+    this.fetchLessons().then(() => {
+      this.filteredLessons = [...this.lessons];
+    });
   },
 });
