@@ -73,6 +73,7 @@
               placeholder="Search for lessons..."
               class="border-gray-300 rounded-lg border-2 p-2 w-full md:w-96 active:border-black"
               v-model="searchQuery"
+              @input="searchLessons"
             />
           </div>
         </div>
@@ -84,8 +85,8 @@
         >
           <div
             class="border border-solid shadow-md m-2 w-auto p-8 rounded-lg"
-            v-for="(lesson, index) in filteredLessons   "
-            :key="index"
+            v-for="(lesson, index) in   filteredLessons "
+            :key="lesson._id"
           >
             <img
               v-bind:src="lesson.images"
@@ -114,7 +115,7 @@
 
             <button
               v-if="lesson.spaces > 0"
-              v-on:click="addToCart(index)"
+              v-on:click="addToCart(lesson._id)"
               class="border-none p-2 bg-green-500 hover:rounded-full text-white rounded-lg font-semibold"
             >
               add To Cart
@@ -122,7 +123,7 @@
             </button>
             <button
               v-else
-              v-on:click="addToCart(index)"
+              v-on:click="addToCart(lesson._id)"
               class="border-none p-2 bg-green-500 text-white rounded-lg font-semibold"
             >
               No spaces
@@ -152,9 +153,6 @@
               </p>
               <p class="text-gray-600 font-semibold pb-2">
                 location: {{items.location}}
-              </p>
-              <p class="text-gray-600 font-semibold pb-2">
-                spaces: {{items.spaces}}
               </p>
 
               <button

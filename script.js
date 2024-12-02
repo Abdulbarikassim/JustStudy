@@ -199,7 +199,7 @@ var app = new Vue({
     },
     //method for searching lessons.
     async searchLessons() {
-      const query = this.searchQuery.trim(); // Ensure no trailing spaces
+      const query = this.searchQuery.trim();
       if (query === "") {
         // Reset the filteredLessons if the query is empty
         this.filteredLessons = [...this.lessons];
