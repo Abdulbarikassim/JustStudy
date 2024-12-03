@@ -55,9 +55,16 @@ var app = new Vue({
       const lesson = this.lessons.find((lesson) => lesson._id === lessonId);
 
       if (lesson && lesson.spaces > 0) {
-        this.cart.push({ ...lesson });
+        // Create a copy of the lesson to store in the cart
+        const cartItem = { ...lesson };
 
-        // Decrement available spaces
+        //decreate the available spaces.
+        cartItem.spaces--;
+
+        // Add the lesson to the cart.
+        this.cart.push(cartItem);
+
+        // Decrement spaces.
         lesson.spaces--;
       }
     },
@@ -97,12 +104,10 @@ var app = new Vue({
       );
       if (originalLesson) {
         originalLesson.spaces++;
-        this.updateLessonSpaces(originalLesson._id, originalLesson.spaces);
       }
 
-      this.cart = this.cart.filter((item, i) => {
-        return i != index;
-      });
+      this.updateLessonSpaces(originalLesson._id, originalLesson.spaces);
+      this.cart.splice(index, 1);
     },
     // sort method
 
