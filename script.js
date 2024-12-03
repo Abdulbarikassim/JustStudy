@@ -40,7 +40,9 @@ var app = new Vue({
     // fetch all lessons.
     async fetchLessons() {
       try {
-        const response = await fetch("http://localhost:5001/api/lessons");
+        const response = await fetch(
+          "https://juststudy-server.onrender.com/api/lessons"
+        );
         if (!response.ok) throw new Error("Failed to fetch lessons ");
         const data = await response.json();
         this.lessons = data;
@@ -73,7 +75,7 @@ var app = new Vue({
     async updateLessonSpaces(id, spaces) {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/lessons/${id}`,
+          `https://juststudy-server.onrender.com/api/lessons/${id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -145,7 +147,7 @@ var app = new Vue({
     async handleSubmit() {
       try {
         const response = await fetch(
-          "http://localhost:5001/api/lessons/order",
+          "https://juststudy-server.onrender.com/api/lessons/order",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -165,11 +167,14 @@ var app = new Vue({
 
         await Promise.all(
           this.cart.map((lesson) =>
-            fetch(`http://localhost:5001/api/lessons/${lesson._id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ spaces: lesson.spaces }),
-            })
+            fetch(
+              `https://juststudy-server.onrender.com/api/lessons/${lesson._id}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ spaces: lesson.spaces }),
+              }
+            )
           )
         );
         this.submitted = true;
@@ -213,7 +218,9 @@ var app = new Vue({
 
       try {
         const response = await fetch(
-          `http://localhost:5001/api/search?q=${encodeURIComponent(query)}`
+          `https://juststudy-server.onrender.com/api/search?q=${encodeURIComponent(
+            query
+          )}`
         );
 
         if (!response.ok) throw new Error("Search failed");
